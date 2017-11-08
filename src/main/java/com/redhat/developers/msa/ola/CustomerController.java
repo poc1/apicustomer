@@ -17,7 +17,6 @@
 package com.redhat.developers.msa.ola;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.redhat.developers.model.CustomerData;
 import com.redhat.developers.model.CustomerDocumentDetail;
-import com.redhat.developers.pojo.Person;
+import com.redhat.developers.pojo.Account;
+import com.redhat.developers.pojo.Company;
+import com.redhat.developers.pojo.Documento;
+import com.redhat.developers.pojo.Persona;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -42,39 +44,54 @@ public final CustomerService customerService;
 	}
 
 	
-	// Búsqueda por codigo de cliente
-	@RequestMapping(value="/code/{id}", method=RequestMethod.GET)
-	@ApiOperation(value = "Código de Cliente",response = CustomerData.class, produces = "application/json")
-	public @ResponseBody Iterable<CustomerDocumentDetail> getCustomerByCode(@PathVariable final String id)
+	
+	/**
+	 * Búsqueda por codigo de cliente y/o por Documentos
+	 * @param document_number
+	 * @return
+	 */
+	@RequestMapping(value="/document/", method=RequestMethod.POST)
+	@ApiOperation(value = "Documentos o Codigo del Cliente (RFC, CURP, PASAPORTE, CODIGO DE CLIENTE)", response = CustomerDocumentDetail.class, produces = "application/json")
+	public /*Iterable<CustomerDocumentDetail>*/ @ResponseBody String getCustomerByDocument(@RequestBody Documento documento)
 	{
-		return customerService.getCustomerByCode(id);
+		return customerService.getCustomerByDocument(documento);
 	}
 	
-	@RequestMapping(value="/document/{document}", method=RequestMethod.GET)
-	@ApiOperation(value = "Documento del Cliente (RFC, CURP, PASAPORTE, ETC)",response = CustomerData.class, produces = "application/json")
-	public Iterable<CustomerDocumentDetail> getCustomerByDocument(@PathVariable final String document)
-	{
-		return customerService.getCustomerByDocument(document);
-	}
 	
-	
+	/**
+	 * Busqueda por nombre, apellido paterno, materno, etc 
+	 * @param person
+	 * @return
+	 */
 	@RequestMapping(value="/name/", method=RequestMethod.POST)
 	@ApiOperation(value = "Nombre y Apellido Paterno o Nombre, Apellido Paterno y Materno o Apellido Paterno y Apellido Materno",response = CustomerData.class, produces = "application/json")
-	public Iterable<CustomerData> getCustomerByDocument(@RequestBody Person person)
+	public /*Iterable<CustomerData>*/ @ResponseBody String getCustomerByDocument(@RequestBody Persona persona)
 	{
-		return customerService.getCustomerByName(person);
+		return customerService.getCustomerByName(persona);
 	}	
 	
-	@RequestMapping(value="/company/{company}", method=RequestMethod.GET)
+	
+	/**
+	 * Busqueda por nombre de empresa
+	 * @param company
+	 * @return
+	 */
+	@RequestMapping(value="/company/", method=RequestMethod.POST)
 	@ApiOperation(value = "Nombre de la Empresa",response = CustomerData.class, produces = "application/json")
-	public Iterable<CustomerData> getCustomerByCompany(@PathVariable final String company)
+	public /*Iterable<CustomerData>*/ @ResponseBody String getCustomerByCompany(@RequestBody Company company)
 	{
 		return customerService.getCustomerByCompany(company);
 	}
 	
-	@RequestMapping(value="/accountnum/{account}", method=RequestMethod.GET)
+	
+	/**
+	 * Búsqueda por número de cuenta
+	 * @param account
+	 * @return
+	 */
+	@RequestMapping(value="/accountnum/", method=RequestMethod.POST)
 	@ApiOperation(value = "Número de Cuenta", response = CustomerData.class, produces = "application/json")
-	public Iterable<CustomerData> getCustomerByAccountNumber(@PathVariable final String account)
+	public /*Iterable<CustomerData>*/ @ResponseBody String getCustomerByAccountNumber(@RequestBody Account account)
 	{
 		return customerService.getCustomerByAccountNumber(account);
 	}
